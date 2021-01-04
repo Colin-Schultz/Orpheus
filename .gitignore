@@ -3,3 +3,4 @@
 *.log
 .metadata\
 env
+*.class
