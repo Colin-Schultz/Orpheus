@@ -69,22 +69,26 @@ public class TextEventListener extends ListenerAdapter {
                 }
                 //Repeats all audio
                 case "echo":{
+                    VoiceChannel connectedChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
+                    if (connectedChannel == null) {
+                        event.getChannel().sendMessage("I am currently not connected to any voice channels").queue();
+                        return;
+                    }
                     if (messageSentArray[1].equalsIgnoreCase("start")) {
-                        VoiceChannel connectedChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
-                        if (connectedChannel == null) {
-                            event.getChannel().sendMessage("I am currently not connected to any voice channels").queue();
-                        }
                         EchoHandler handler = new EchoHandler();
                         AudioManager audioManager = event.getGuild().getAudioManager();
                         audioManager.setSendingHandler(handler);
                         audioManager.setReceivingHandler(handler);
                         audioManager.openAudioConnection(connectedChannel);
+                        event.getChannel().sendMessage("I am now echoing you're speech").queue();
                     }
                     //Resets the audio Handlers to null
                     else if (messageSentArray[1].equalsIgnoreCase("stop")){
                         event.getGuild().getAudioManager().setSendingHandler(null);
                         event.getGuild().getAudioManager().setReceivingHandler(null);
+                        event.getChannel().sendMessage("I am no longer echoing you're speech").queue();
                     }
+                    break;
                 }
             }
 
