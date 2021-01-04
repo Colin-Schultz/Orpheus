@@ -2,3 +2,4 @@
 .metadata/
 *.log
 .metadata\
+env
