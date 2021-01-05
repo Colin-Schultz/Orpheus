@@ -34,6 +34,27 @@
             <artifactId>jackson-core</artifactId>
             <version>2.12.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.30</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.30</version>
+        </dependency>
+        <dependency>
+            <groupId>me.duncte123</groupId>
+            <artifactId>botCommons</artifactId>
+            <version>2.0.122</version>
+        </dependency>
+
     </dependencies>
     <repositories>
         <repository>
