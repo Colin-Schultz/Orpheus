@@ -1,7 +1,6 @@
 import configs.Config;
 import events.AudioEventListener;
 import events.Listener;
-import events.TextEventListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
