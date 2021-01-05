@@ -1,4 +1,4 @@
-package commands.botcommands;
+package commands.botcommands.musiccommands;
 
 import commands.CommandContext;
 import commands.ICommand;
@@ -7,8 +7,13 @@ import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PlayCommand implements ICommand {
 
@@ -38,6 +43,7 @@ public class PlayCommand implements ICommand {
             return;
         }
         String link = String.join(" ", ctx.getArgs());
+
         if(!isUrl(link)){
             link = "ytsearch:" + link;
         }
@@ -50,15 +56,20 @@ public class PlayCommand implements ICommand {
     }
 
     @Override
+    public List<String> getAliases(){
+        return  Stream.of("p").collect(Collectors.toList());
+    }
+
+    @Override
     public String getHelp() {
         return "Plays music\n" + "!play <youtube link>";
     }
 
     private boolean isUrl(String url){
         try{
-            new URI(url);
+            URI test = new URL(url).toURI();
             return true;
-        }catch (URISyntaxException e){
+        }catch (URISyntaxException | MalformedURLException e){
             return false;
         }
     }

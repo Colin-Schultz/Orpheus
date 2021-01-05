@@ -4,7 +4,11 @@ import commands.CommandContext;
 import commands.ICommand;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
-public class LeaveCommand implements ICommand {
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class DisconnectCommand implements ICommand {
     @Override
     public void handle(CommandContext event) {
         VoiceChannel connectedChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
@@ -21,6 +25,10 @@ public class LeaveCommand implements ICommand {
     }
     @Override
     public String getName() {
-        return "leave";
+        return "disconnect";
+    }
+    @Override
+    public List<String> getAliases(){
+        return  Stream.of("leave").collect(Collectors.toList());
     }
 }

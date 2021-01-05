@@ -1,6 +1,10 @@
 package commands;
 
 import commands.botcommands.*;
+import commands.botcommands.musiccommands.NowplayingCommand;
+import commands.botcommands.musiccommands.PlayCommand;
+import commands.botcommands.musiccommands.SkipCommand;
+import commands.botcommands.musiccommands.StopCommand;
 import configs.Config;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
@@ -19,10 +23,13 @@ public class CommandManager {
         addCommand(new ColinCommand());
         addCommand(new NathanCommand());
         addCommand(new ConnectCommand());
-        addCommand(new LeaveCommand());
+        addCommand(new DisconnectCommand());
         addCommand(new EchoCommand());
         addCommand(new HelpCommand(this));
         addCommand(new PlayCommand());
+        addCommand(new StopCommand());
+        addCommand(new SkipCommand());
+        addCommand(new NowplayingCommand());
     }
 
     private void addCommand(ICommand cmd){

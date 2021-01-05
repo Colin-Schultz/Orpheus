@@ -43,6 +43,7 @@ public class PlayerManager {
             @Override
             public void trackLoaded(AudioTrack track) {
                 musicManager.scheduler.queue(track);
+
                 channel.sendMessage("Adding to Queue: `")
                         .append(track.getInfo().title)
                         .append("' by '").append(track.getInfo().author)
@@ -52,24 +53,39 @@ public class PlayerManager {
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
                 List<AudioTrack> tracks = audioPlaylist.getTracks();
+                if(trackUrl.contains("ytsearch:")){
+                    AudioTrack track = tracks.get(0);
+                    musicManager.scheduler.queue(track);
+
+                    channel.sendMessage("Adding to Queue: `")
+                            .append(track.getInfo().title)
+                            .append("' by '").append(track.getInfo().author)
+                            .append("`").queue();
+                    return;
+                }
+
+
                 channel.sendMessage("Adding to Queue: `")
                         .append(String.valueOf(tracks.size()))
                         .append("' tracks from playlist '")
                         .append(audioPlaylist.getName())
                         .append("`").queue();
+
                 for (final AudioTrack track : tracks){
                     musicManager.scheduler.queue(track);
-                    }
+                }
             }
 
             @Override
             public void noMatches() {
-
+                System.out.println("No matches");
+                System.out.println(trackUrl);
             }
 
             @Override
             public void loadFailed(FriendlyException e) {
-
+                System.out.println("Load Failed");
+                System.out.println(e);
             }
         });
     }
