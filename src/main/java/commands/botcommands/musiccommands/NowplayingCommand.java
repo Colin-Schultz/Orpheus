@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,7 +58,7 @@ public class NowplayingCommand implements ICommand {
         long durationSeconds = playingTrack.getDuration()/1000%60;
         String duration = (durationMinutes + ":" + durationSeconds);
 
-        channel.sendMessageFormat("Now playing `%s` by `%s`\n(Link: <%s>)\nDuration:%s/%s", info.title, info.author, info.uri, position, duration).queue();
+        channel.sendMessageFormat("Now playing `%s` by `%s`\n(Link: <%s>)\nDuration:%s/%s", info.title, info.author, info.uri, formatTime(playingTrack.getPosition()), formatTime(playingTrack.getDuration())).queue();
 
 
 
@@ -76,5 +77,12 @@ public class NowplayingCommand implements ICommand {
     @Override
     public List<String> getAliases(){
         return  Stream.of("np", "current").collect(Collectors.toList());
+    }
+
+    private String formatTime(long duration){
+        final long hours = duration / TimeUnit.HOURS.toMillis(1);
+        final long minutes = duration / TimeUnit.MINUTES.toMillis(1);
+        final long seconds = duration % TimeUnit.MINUTES.toMillis(1) / TimeUnit.SECONDS.toMillis(1);
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 }

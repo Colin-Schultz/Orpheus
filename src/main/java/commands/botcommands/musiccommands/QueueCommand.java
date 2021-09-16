@@ -10,13 +10,16 @@ import lavaplayer.PlayerManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SkipCommand implements ICommand {
+public class QueueCommand implements ICommand {
     @Override
     public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
@@ -43,39 +46,56 @@ public class SkipCommand implements ICommand {
 
         final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
         final AudioPlayer audioPlayer = musicManager.audioPlayer;
+        final BlockingQueue<AudioTrack> queue = musicManager.scheduler.queue;
 
-        if(audioPlayer.getPlayingTrack() == null){
-            channel.sendMessage("There is no track playing").queue();
+        if(queue.isEmpty()){
+            channel.sendMessage("There are no tracks in the queue").queue();
             return;
         }
-        musicManager.scheduler.nextTrack();
-        channel.sendMessage("The current track has been skipped").queue();
 
-        final AudioTrack playingTrack = audioPlayer.getPlayingTrack();
-        if(playingTrack == null){
-            return;
+        final int trackCount = Math.min(queue.size(), 10);
+
+        final List<AudioTrack> trackList = new ArrayList<>(queue);
+        final MessageAction messageAction = channel.sendMessage("**Current Queue:**\n");
+        for (int i = 0; i < trackCount; i++){
+            final AudioTrack track = trackList.get(i);
+            final AudioTrackInfo info = track.getInfo();
+
+            messageAction
+                    .append('#')
+                    .append(String.valueOf(i+1))
+                    .append(" `")
+                    .append(info.title)
+                    .append(" by ")
+                    .append(info.author)
+                    .append("` [`")
+                    .append(formatTime(track.getDuration()))
+                    .append("`]\n");
+
         }
-        AudioTrackInfo info = playingTrack.getInfo();
 
-        channel.sendMessageFormat("Now playing `%s` by `%s`\n(Link: <%s>)\nDuration:%s", info.title, info.author, info.uri, formatTime(playingTrack.getDuration())).queue();
-
-
+        if (trackList.size() > trackCount){
+            messageAction.append("And `")
+                    .append(String.valueOf(trackList.size() - trackCount))
+                    .append("' more...");
+        }
+        messageAction.queue();
 
     }
 
     @Override
     public String getName() {
-        return "skip";
+        return "queue";
     }
 
     @Override
     public String getHelp() {
-        return "Skips the current track.";
+        return "See all the tracks in queue";
     }
 
     @Override
     public List<String> getAliases(){
-        return  Stream.of("skp").collect(Collectors.toList());
+        return  Stream.of("q", "queued").collect(Collectors.toList());
     }
 
     private String formatTime(long duration){
