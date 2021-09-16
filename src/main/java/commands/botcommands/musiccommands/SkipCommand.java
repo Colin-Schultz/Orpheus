@@ -75,7 +75,7 @@ public class SkipCommand implements ICommand {
 
     @Override
     public List<String> getAliases(){
-        return  Stream.of("skp").collect(Collectors.toList());
+        return  Stream.of("skp","fs").collect(Collectors.toList());
     }
 
     private String formatTime(long duration){

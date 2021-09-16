@@ -16,9 +16,6 @@ public class CommandManager {
 
     public CommandManager(){
         addCommand(new PingCommand());
-        addCommand(new HelloCommand());
-        addCommand(new ColinCommand());
-        addCommand(new NathanCommand());
         addCommand(new ConnectCommand());
         addCommand(new DisconnectCommand());
         addCommand(new HelpCommand(this));
