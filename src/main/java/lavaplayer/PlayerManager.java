@@ -84,9 +84,8 @@ public class PlayerManager {
 
             @Override
             public void loadFailed(FriendlyException e) {
-                System.out.println("Load Failed");
-                System.out.println(e);
-            }
+                System.out.println("Load Failed: " + e);
+                channel.sendMessage("Load Failed: " + e);           }
         });
     }
 

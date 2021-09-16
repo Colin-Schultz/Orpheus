@@ -29,6 +29,6 @@ public class DisconnectCommand implements ICommand {
     }
     @Override
     public List<String> getAliases(){
-        return  Stream.of("leave").collect(Collectors.toList());
+        return  Stream.of("leave","d").collect(Collectors.toList());
     }
 }

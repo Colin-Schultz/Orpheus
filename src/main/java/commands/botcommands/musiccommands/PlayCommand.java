@@ -2,6 +2,7 @@ package commands.botcommands.musiccommands;
 
 import commands.CommandContext;
 import commands.ICommand;
+import commands.botcommands.ConnectCommand;
 import lavaplayer.PlayerManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -15,33 +16,34 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class PlayCommand implements ICommand {
+public class PlayCommand extends ConnectCommand {
 
     @Override
     public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
         final Member self = ctx.getSelfMember();
         final GuildVoiceState selfVoiceState = self.getVoiceState();
+        final Member member = ctx.getMember();
+        final GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if(ctx.getArgs().isEmpty()){
             channel.sendMessage("I need arguments for this command.").queue();
         }
 
         if(!selfVoiceState.inVoiceChannel()){
-            channel.sendMessage("I need to be in a voice channel for this to work").queue();
-            return;
+            connect(ctx);
         }
-        final Member member = ctx.getMember();
-        final GuildVoiceState memberVoiceState = member.getVoiceState();
-        if(!memberVoiceState.inVoiceChannel()){
+
+        else if(!memberVoiceState.inVoiceChannel()){
             channel.sendMessage("You need to be in a voice channel for this to work").queue();
             return;
         }
 
-        if(!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())){
+        else if(!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())){
             channel.sendMessage("You need to be in the same voice channel as me for this to work").queue();
             return;
         }
+
         String link = String.join(" ", ctx.getArgs());
 
         if(!isUrl(link)){
